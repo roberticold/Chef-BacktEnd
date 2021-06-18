@@ -1,12 +1,10 @@
-from itertools import product
-from app import app, db, mail
+from app import app, db
 from flask import render_template, request, redirect, url_for, flash, jsonify
-from flask_login import login_user, logout_user, login_required
 from flask_mail import Message
 from werkzeug.security import check_password_hash
 from app.models import  Likes, User, Recipes,Comments,Favourites,Contacts
-from sqlalchemy.sql import func
-from flask_httpauth import HTTPBasicAuth, HTTPTokenAuth
+
+
 
 
 
@@ -306,6 +304,28 @@ def GetContacts():
 
 
 
+
+# Deleting a contact from contacts
+@app.route('/api/contact/delete/<int:id>/<string:user>', methods=['DELETE'])
+def deletecontact(id,user):
+   
+    
+    contact = Contacts.query.filter_by(username=user,contact_id=id).first()
+    db.session.delete(contact)
+    db.session.commit()  
+
+    exist_contact = Contacts.query.filter_by(username=user)
+    contactid=[exist.contact_id for exist in exist_contact]
+
+    chefs = User.query.all()
+    return jsonify([chef.to_dict() for chef in chefs if chef.id in contactid])
+
+
+
+
+
+
+
 # addFavourites
 
 @app.route('/api/addfavourites/<int:id>', methods=['POST'])
@@ -346,3 +366,54 @@ def GetFavourites():
 
     favs = Recipes.query.all()
     return jsonify([fav.to_dict() for fav in favs if fav.id in recipeid])
+
+
+# Get profile
+@app.route('/api/getprofile/<string:user>', methods=['GET'])
+def GetProfile(user):
+
+    current_user = User.query.filter_by(username=user).first()
+    return jsonify(current_user.to_dict())
+
+# Delete Account
+
+@app.route('/api/account/delete/<string:user>', methods=['DELETE'])
+def DeleteAccount(user):
+
+    current_user = User.query.filter_by(username=user).first()
+    db.session.delete(current_user)
+    db.session.commit()
+    
+
+    recipe = Recipes.query.filter_by(username=user)
+    if recipe:
+        for reci in recipe:
+            db.session.delete(reci)
+            db.session.commit()
+    
+    commen = Comments.query.filter_by(user_name=user)
+    if commen:
+        for com in commen:
+            db.session.delete(com)
+            db.session.commit()
+
+    likes = Likes.query.filter_by(username=user)     
+    if likes:
+        for like in likes:
+            db.session.delete(like)
+            db.session.commit()   
+
+             
+    favourite = Favourites.query.filter_by(username=user)     
+    if favourite:
+        for fav in favourite:
+            db.session.delete(fav)
+            db.session.commit() 
+
+    contacts = Contacts.query.filter_by(username=user)     
+    if contacts:
+        for con in contacts:
+            db.session.delete(con)
+            db.session.commit()           
+    
+    return jsonify("Successful")

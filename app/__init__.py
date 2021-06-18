@@ -5,12 +5,14 @@ from flask_mail import Mail
 from config import Config
 
 
+
 app = Flask(__name__)
 app.config.from_object(Config)
 app.config['SQLALCHEMY_DATABASE_URI']= 'sqlite:///productss.db'
 
 
 db = SQLAlchemy(app)
+
 migrate = Migrate(app, db)
 
 mail = Mail(app)
