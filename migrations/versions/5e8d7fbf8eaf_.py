@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 3260b0036ed8
+Revision ID: 5e8d7fbf8eaf
 Revises: 
-Create Date: 2021-06-17 16:20:12.747443
+Create Date: 2021-06-21 18:03:36.262846
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '3260b0036ed8'
+revision = '5e8d7fbf8eaf'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -37,12 +37,14 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('username', sa.String(length=30), nullable=True),
     sa.Column('recipe_id', sa.Integer(), nullable=False),
+    sa.Column('favourite_status', sa.Integer(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('likes',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('username', sa.String(length=30), nullable=False),
     sa.Column('recipe_id', sa.Integer(), nullable=False),
+    sa.Column('likes_status', sa.Integer(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('recipes',
@@ -54,8 +56,6 @@ def upgrade():
     sa.Column('username', sa.String(length=30), nullable=False),
     sa.Column('likes', sa.Integer(), nullable=False),
     sa.Column('photo', sa.String(length=150), nullable=False),
-    sa.Column('likes_status', sa.Integer(), nullable=False),
-    sa.Column('favourite_status', sa.Integer(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('user',

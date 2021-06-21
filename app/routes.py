@@ -41,7 +41,7 @@ def create_recipie():
     user_id = data["user_id"]
     username = data["user_name"]
     photo=data["recipe_photo"]
-    recipie = Recipes(name, preparation, user_id, username, photo,likes=False,likes_status=0,favourite_status=0)
+    recipie = Recipes(name, preparation, user_id, username, photo,likes=False)
     db.session.add(recipie)
     db.session.commit()
     return jsonify(recipie.to_dict())
@@ -158,24 +158,34 @@ def liketRecipe(id):
         user1=Likes.query.filter_by(username=user,recipe_id=id).first()
         db.session.delete(user1)
         db.session.commit()
-        likes = Recipes.query.filter_by(id=id).first()
-        likes.likes -= 1
-        likes.likes_status=0
+        recipe = Recipes.query.filter_by(id=id).first()
+        recipe.likes -= 1
         db.session.commit()
-        return jsonify(likes.to_dict())
+        
+        return jsonify(recipe.to_dict())
     else:
-        user=Likes(user,id)
+        user=Likes(user,id,1)
         db.session.add(user)
         db.session.commit()
-        likes = Recipes.query.filter_by(id=id).first()
-        data = request.json
-        likes.likes += 1
-        likes.likes_status=1
+        recipe = Recipes.query.filter_by(id=id).first()
+        recipe.likes += 1
         db.session.commit()
-
-        return jsonify(likes.to_dict())
+       
+        return jsonify(recipe.to_dict())
     
 
+#get Likes
+
+@app.route('/api/getLikes/<int:id>', methods=['POST'])
+def GetLikes(id):
+
+    data = request.json
+    username=data["username"]
+    like_status = Likes.query.filter_by(username=username,recipe_id=id).first()
+    if like_status:
+        return "1"
+    else:
+        return "0"  
 
 
 #comments
@@ -337,21 +347,36 @@ def AddFavourites(id):
     username=data["username"]
     exist_recipe = Favourites.query.filter_by(username=username)
     if id not in [exist.recipe_id for exist in exist_recipe]:
-        favourite = Favourites(username,id)
+        favourite = Favourites(username,id,1)
         db.session.add(favourite)
         db.session.commit()
-        fav = Recipes.query.filter_by(id=id).first()
-        fav.favourite_status=1
-        db.session.commit()
-        return jsonify(fav.to_dict())
+        
+        return jsonify(favourite.to_dict())
     else:
         fav=Favourites.query.filter_by(username=username,recipe_id=id).first()
         db.session.delete(fav)
         db.session.commit()
-        fav = Recipes.query.filter_by(id=id).first()
-        fav.favourite_status=0
-        db.session.commit()
+       
         return jsonify(fav.to_dict())
+
+
+# getFavouriteStatus
+
+    
+@app.route('/api/getfavourites/<int:id>', methods=['POST'])
+def GetFavouriteStatus(id):
+
+    data = request.json
+    username=data["username"]
+    fav_status = Favourites.query.filter_by(username=username,recipe_id=id).first()
+    if fav_status:
+        return "1"
+    else:
+        return "0"  
+
+    
+    
+
 
 
    

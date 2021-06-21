@@ -58,18 +58,18 @@ class Recipes(db.Model):
     username = db.Column(db.String(30), nullable=False,  default="")
     likes = db.Column(db.Integer(), nullable=False)
     photo = db.Column(db.String(150), nullable=False,)
-    likes_status = db.Column(db.Integer(), nullable=False)
-    favourite_status = db.Column(db.Integer(), nullable=False)
+    
+    
 
-    def __init__(self, name, preparation,user_id,username,photo,likes,likes_status,favourite_status):
+    def __init__(self, name, preparation,user_id,username,photo,likes):
         self.name = name
         self.preparation = preparation
         self.user_id = user_id
         self.username=username
         self.photo=photo
         self.likes=likes
-        self.likes_status=likes_status
-        self.favourite_status=favourite_status
+        
+        
 
 
 
@@ -83,8 +83,7 @@ class Recipes(db.Model):
             'date_created':self.date_created,
             'username':self.username,
             'photo':self.photo,
-            'likes_status':self.likes_status,
-            'favourite_status':self.favourite_status
+            
             
         } 
 
@@ -96,14 +95,23 @@ class Likes(db.Model):
     id = db.Column(db.Integer, primary_key=True)    
     username = db.Column(db.String(30), nullable=False)
     recipe_id = db.Column(db.Integer(), nullable=False)
+    likes_status = db.Column(db.Integer(), nullable=False)
 
 
-    def __init__(self, username, recipe_id):
+    def __init__(self, username, recipe_id,likes_status):
         self.username = username
         self.recipe_id = recipe_id
+        self.likes_status = likes_status
         
 
-
+    def to_dict(self):
+        return {
+            'id':self.id,
+            'username':self.username,
+            'recipe_id':self.recipe_id,
+            'likes_status':self.likes_status,
+        }
+           
 
 
 
@@ -165,13 +173,23 @@ class Favourites(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(30))
     recipe_id = db.Column(db.Integer(), nullable=False)
+    favourite_status = db.Column(db.Integer(), nullable=False)
+    
 
 
-    def __init__(self, username, recipe_id):
+    def __init__(self, username, recipe_id,favourite_status):
         self.username = username
         self.recipe_id=recipe_id
+        self.favourite_status=favourite_status
 
 
-
+    def to_dict(self):
+        return {
+            'id':self.id,
+            'username':self.username,
+            'recipe_id':self.recipe_id,
+            'favourite_status':self.favourite_status,
+        }
+            
 
 
