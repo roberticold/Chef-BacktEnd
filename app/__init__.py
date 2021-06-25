@@ -10,7 +10,7 @@ from flask_cors import CORS,cross_origin
 app = Flask(__name__)
 CORS(app)
 app.config.from_object(Config)
-app.config['SQLALCHEMY_DATABASE_URI']= 'sqlite:///productss.db'
+app.config['SQLALCHEMY_DATABASE_URI']= 'postgresql://czzjcisk:9sK8aO8K4rCbhNdW3jHBFckanJ_0Uoob@batyr.db.elephantsql.com/czzjcisk'
 
 
 db = SQLAlchemy(app)
