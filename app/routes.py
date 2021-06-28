@@ -41,7 +41,7 @@ def create_recipie():
     user_id = data["user_id"]
     username = data["user_name"]
     photo=data["recipe_photo"]
-    recipie = Recipes(name, preparation, user_id, username, photo,likes=False)
+    recipie = Recipes(name, preparation, user_id, username, photo,likes=0)
     db.session.add(recipie)
     db.session.commit()
     return jsonify(recipie.to_dict())
