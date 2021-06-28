@@ -263,12 +263,12 @@ def updateuser():
 
     data = request.json
     old_user=data["old_user"]
-    user_name=data["username"]
+   
     email=data["email"]
     password=data["password"]
     
     user = User.query.filter_by(username=old_user).first()
-    user.username =user_name
+    
     user.password=password
     user.email=email
     db.session.commit()
