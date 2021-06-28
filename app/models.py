@@ -52,7 +52,7 @@ class User(db.Model):
 class Recipes(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30), nullable=False, default="")
-    preparation = db.Column(db.String(500),  nullable=False)
+    preparation = db.Column(db.String(2000),  nullable=False)
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     user_id = db.Column(db.Integer(), nullable=False)
     username = db.Column(db.String(30), nullable=False,  default="")
