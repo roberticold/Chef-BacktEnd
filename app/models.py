@@ -22,7 +22,7 @@ class User(db.Model):
     def __init__(self, username, email, password,photo):
         self.username = username
         self.email = email
-        self.password = generate_password_hash(password)
+        self.password =password
         self.photo = photo
 
     def __repr__(self):
