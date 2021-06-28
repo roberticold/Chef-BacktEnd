@@ -56,7 +56,7 @@ def loginUser():
     password = data["password"]
 
     user = User.query.filter_by(username=username).first()
-    if user and check_password_hash(user.password, password):
+    if user and user.password == password:
         user = User.query.filter_by(username=username).first()
         return jsonify(user.to_dict())
 
